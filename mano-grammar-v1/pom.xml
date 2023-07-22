@@ -5,9 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.ubiqube.mano</groupId>
-		<artifactId>mano-super-pom</artifactId>
+		<artifactId>mano-grammar-aggregator</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent> 
 	<artifactId>mano-grammar-v1</artifactId>
 	<packaging>jar</packaging>
@@ -19,7 +18,7 @@
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
 			<artifactId>mano-grammar-antlr</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.ubiqube.mano</groupId>
@@ -47,7 +46,7 @@
 			<plugin>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr4-maven-plugin</artifactId>
-				<version>4.10.1</version>
+				<version>${version.plugin.antlr4-maven-plugin}</version>
 				<executions>
 					<execution>
 						<id>antlr</id>
