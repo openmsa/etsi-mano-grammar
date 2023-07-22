@@ -46,7 +46,7 @@ import jakarta.annotation.Nullable;
 
 /**
  *
- * @author Olivier Vignaud <ovi@ubiqube.com>
+ * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
  *
  */
 public class TreeBuilder extends EtsiFilterBaseListener {
