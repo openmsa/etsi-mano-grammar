@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.ubiqube.mano</groupId>
 		<artifactId>mano-super-pom</artifactId>
-		<version>3.2.0</version>
+		<version>3.2.1-SNAPSHOT</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<artifactId>mano-grammar-aggregator</artifactId>
@@ -17,7 +17,7 @@
 	</modules>
 	<scm>
 		<developerConnection>scm:git:https://github.com/openmsa/etsi-mano-grammar.git</developerConnection>
-		<tag>mano-grammar-aggregator-3.2.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<properties>
 		<version.plugin.antlr4-maven-plugin>4.10.1</version.plugin.antlr4-maven-plugin>	
