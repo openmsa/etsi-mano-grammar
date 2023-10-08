@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
 
 import com.mano.etsi.grammar.v1.EtsiFilter;
 import com.mano.etsi.grammar.v1.EtsiLexer;
-import com.ubiqube.etsi.mano.grammar.Node;
+import com.ubiqube.etsi.mano.grammar.GrammarNode;
 import com.ubiqube.etsi.mano.grammar.antlr.AbstractAntlrGrammar;
 
 /**
@@ -66,7 +66,7 @@ public class Grammarv1Service extends AbstractAntlrGrammar<TreeBuilder> {
 	}
 
 	@Override
-	protected List<Node<String>> getNodes(final TreeBuilder treeBuilder) {
+	protected List<GrammarNode> getNodes(final TreeBuilder treeBuilder) {
 		return treeBuilder.getListNode();
 	}
 

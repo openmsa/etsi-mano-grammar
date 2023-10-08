@@ -31,12 +31,12 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.grammar.v1.Grammarv1Service;
 
 class GrammarTest {
@@ -47,9 +47,9 @@ class GrammarTest {
 	 */
 	@Test
 	void testSimpleValue() {
-		final List<Node<String>> nodes = grammarv1Service.parse("id.gt=aaa");
+		final GrammarNodeResult nodes = grammarv1Service.parse("id.gt=aaa");
 		assertEquals(1, nodes.size());
-		assertNode(nodes.get(0), "id", Operand.GT, "aaa");
+		assertNode((BooleanExpression) nodes.get(0), List.of("id"), GrammarOperandType.GT, List.of("aaa"));
 	}
 
 	/**
@@ -57,9 +57,9 @@ class GrammarTest {
 	 */
 	@Test
 	void testComplexValue() {
-		final List<Node<String>> nodes = grammarv1Service.parse("id.eq=fce04624-6f92-42b1-bf50-437b682288a5");
+		final GrammarNodeResult nodes = grammarv1Service.parse("id.eq=fce04624-6f92-42b1-bf50-437b682288a5");
 		assertEquals(1, nodes.size());
-		assertNode(nodes.get(0), "id", Operand.EQ, "fce04624-6f92-42b1-bf50-437b682288a5");
+		assertNode((BooleanExpression) nodes.get(0), List.of("id"), GrammarOperandType.EQ, List.of("fce04624-6f92-42b1-bf50-437b682288a5"));
 	}
 
 	/**
@@ -67,11 +67,8 @@ class GrammarTest {
 	 */
 	@Test
 	void testMultiValueIssue() {
-		final List<Node<String>> nodes = grammarv1Service.parse("id.eq=fce04624-6f92-42b1-bf50-437b682288a5,OOOOOOO");
-		final Node node = nodes.get(0);
-		final List<String> values = node.getValues();
-		assertEquals("fce04624-6f92-42b1-bf50-437b682288a5", values.get(0));
-		assertEquals("OOOOOOO", values.get(1));
+		final GrammarNodeResult nodes = grammarv1Service.parse("id.eq=fce04624-6f92-42b1-bf50-437b682288a5,OOOOOOO");
+		assertNode((BooleanExpression) nodes.get(0), List.of("id"), GrammarOperandType.EQ, List.of("fce04624-6f92-42b1-bf50-437b682288a5", "OOOOOOO"));
 	}
 
 	/**
@@ -79,10 +76,10 @@ class GrammarTest {
 	 */
 	@Test
 	void testMultiOp() {
-		final List<Node<String>> nodes = grammarv1Service.parse("id.eq=string&vnfdVersion.gt=bad");
+		final GrammarNodeResult nodes = grammarv1Service.parse("id.eq=string&vnfdVersion.gt=bad");
 		assertEquals(2, nodes.size());
-		assertNode(nodes.get(0), "id", Operand.EQ, "string");
-		assertNode(nodes.get(1), "vnfdVersion", Operand.GT, "bad");
+		assertNode((BooleanExpression) nodes.get(0), List.of("id"), GrammarOperandType.EQ, List.of("string"));
+		assertNode((BooleanExpression) nodes.get(1), List.of("vnfdVersion"), GrammarOperandType.GT, List.of("bad"));
 	}
 
 	/**
@@ -90,10 +87,10 @@ class GrammarTest {
 	 */
 	@Test
 	void testMultiAttr() {
-		final List<Node<String>> nodes = grammarv1Service.parse("id.my.bean.eq=string&vnfdVersion.gt=bad");
+		final GrammarNodeResult nodes = grammarv1Service.parse("id.my.bean.eq=string&vnfdVersion.gt=bad");
 		assertEquals(2, nodes.size());
-		assertNode(nodes.get(0), "id.my.bean", Operand.EQ, "string");
-		assertNode(nodes.get(1), "vnfdVersion", Operand.GT, "bad");
+		assertNode((BooleanExpression) nodes.get(0), List.of("id", "my", "bean"), GrammarOperandType.EQ, List.of("string"));
+		assertNode((BooleanExpression) nodes.get(1), List.of("vnfdVersion"), GrammarOperandType.GT, List.of("bad"));
 	}
 
 	/**
@@ -101,15 +98,36 @@ class GrammarTest {
 	 */
 	@Test
 	void testMultiAttr2() {
-		final List<Node<String>> nodes = grammarv1Service.parse("id.my.bean.eq=stri556ng&my.long.vnfdVersion.gt=bad_ty");
+		final GrammarNodeResult nodes = grammarv1Service.parse("id.my.bean.eq=stri556ng&my.long.vnfdVersion.gt=bad_ty");
 		assertEquals(2, nodes.size());
-		assertNode(nodes.get(0), "id.my.bean", Operand.EQ, "stri556ng");
-		assertNode(nodes.get(1), "my.long.vnfdVersion", Operand.GT, "bad_ty");
+		assertNode((BooleanExpression) nodes.get(0), List.of("id", "my", "bean"), GrammarOperandType.EQ, List.of("stri556ng"));
+		assertNode((BooleanExpression) nodes.get(1), List.of("my", "long", "vnfdVersion"), GrammarOperandType.GT, List.of("bad_ty"));
 	}
 
-	private static void assertNode(final Node node, final String key, final Operand op, final String value) {
-		assertEquals(key, node.getName());
+	private static void assertNode(final BooleanExpression node, final List<String> key, final GrammarOperandType op, final List<String> value) {
+		final GrammarLabel l = (GrammarLabel) node.getLeft();
+		assertKey(key, l);
 		assertEquals(op, node.getOp());
-		assertEquals(value, node.getValue());
+		assertValue(value, (GrammarValue) node.getRight());
+	}
+
+	private static void assertKey(final List<String> keys, final GrammarLabel labels) {
+		if (keys.size() == 1) {
+			assertTrue(labels.isSingle());
+			assertEquals(keys.get(0), labels.getAsString());
+			return;
+		}
+		final List<String> labs = labels.getList();
+		assertEquals(keys, labs);
+	}
+
+	private static void assertValue(final List<String> keys, final GrammarValue labels) {
+		if (keys.size() == 1) {
+			assertTrue(labels.isSingle());
+			assertEquals(keys.get(0), labels.getAsString());
+			return;
+		}
+		final List<String> labs = labels.getList();
+		assertEquals(keys, labs);
 	}
 }

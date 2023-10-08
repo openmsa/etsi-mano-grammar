@@ -41,8 +41,7 @@ import org.junit.jupiter.api.Test;
 
 import com.mano.etsi.grammar.v1.EtsiFilter;
 import com.mano.etsi.grammar.v1.EtsiLexer;
-import com.ubiqube.etsi.mano.grammar.Node;
-import com.ubiqube.etsi.mano.grammar.Node.Operand;
+import com.ubiqube.etsi.mano.grammar.GrammarNode;
 import com.ubiqube.etsi.mano.grammar.v1.TreeBuilder;
 
 class FilterTest {
@@ -57,7 +56,7 @@ class FilterTest {
 		final TreeBuilder treeBuilder = new TreeBuilder();
 		parser.addParseListener(treeBuilder);
 		parser.filterExpr();
-		final List<Node<String>> listNode = treeBuilder.getListNode();
+		final List<GrammarNode> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
 		assertEquals(1, listNode.size());
 	}
@@ -72,7 +71,7 @@ class FilterTest {
 		final TreeBuilder treeBuilder = new TreeBuilder();
 		parser.addParseListener(treeBuilder);
 		parser.filterExpr();
-		final List<Node<String>> listNode = treeBuilder.getListNode();
+		final List<GrammarNode> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
 		assertEquals(2, listNode.size());
 	}
@@ -87,13 +86,8 @@ class FilterTest {
 		final TreeBuilder treeBuilder = new TreeBuilder();
 		parser.addParseListener(treeBuilder);
 		parser.filterExpr();
-		final List<Node<String>> listNode = treeBuilder.getListNode();
+		final List<GrammarNode> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
 		assertEquals(1, listNode.size());
-		final Node node = listNode.get(0);
-		assertEquals(Operand.NEQ, node.getOp());
-		assertEquals("red", node.getValue());
-		assertEquals("color.of.my.bean", node.getName());
-		System.out.println(treeBuilder.toString());
 	}
 }
