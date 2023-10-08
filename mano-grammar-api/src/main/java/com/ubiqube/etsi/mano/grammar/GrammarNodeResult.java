@@ -12,18 +12,28 @@
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see https://www.gnu.org/licenses/.
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.ubiqube.etsi.mano.grammar;
 
-import org.springframework.lang.Nullable;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
- *
- * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
- *
+ * @author Olivier Vignaud
  */
-public interface GrammarParser {
+@AllArgsConstructor
+@Getter
+public class GrammarNodeResult {
+	private final List<GrammarNode> nodes;
 
-	GrammarNodeResult parse(@Nullable String query);
+	public Integer size() {
+		return nodes.size();
+	}
+
+	public GrammarNode get(final int i) {
+		return nodes.get(i);
+	}
 }

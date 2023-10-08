@@ -12,18 +12,25 @@
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see https://www.gnu.org/licenses/.
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.ubiqube.etsi.mano.grammar;
 
-import org.springframework.lang.Nullable;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- *
- * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
- *
- */
-public interface GrammarParser {
+import org.junit.jupiter.api.Test;
 
-	GrammarNodeResult parse(@Nullable String query);
+class BooleanExpressionTest {
+
+	@Test
+	void test() {
+		final BooleanExpression srv = new BooleanExpression(null, GrammarOperandType.CONT, null);
+		srv.getLeft();
+		assertEquals(GrammarOperandType.CONT, srv.getOp());
+		srv.getRight();
+		srv.setLeft(srv);
+		srv.setOp(null);
+		srv.setRight(srv);
+	}
+
 }

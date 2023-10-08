@@ -12,18 +12,13 @@
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see https://www.gnu.org/licenses/.
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.ubiqube.etsi.mano.grammar;
 
-import org.springframework.lang.Nullable;
-
 /**
- *
- * @author Olivier Vignaud {@literal <ovi@ubiqube.com>}
- *
+ * @author Olivier Vignaud
  */
-public interface GrammarParser {
-
-	GrammarNodeResult parse(@Nullable String query);
+public interface GrammarNode {
+	// Nothing.
 }

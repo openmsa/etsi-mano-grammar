@@ -17,6 +17,7 @@
 module com.ubiqube.etsi.mano.grammar {
 	exports com.ubiqube.etsi.mano.grammar;
 
-	requires spring.core;
+	requires lombok;
 	requires jakarta.annotation;
+	requires spring.core;
 }
