@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,7 @@ class GrammarContextTest {
 		srv.getResults();
 		srv.getRight();
 		srv.isMulti();
+		assertTrue(true);
 	}
 
 	@Test

@@ -57,7 +57,7 @@ public abstract class AbstractAntlrGrammar<T extends ParseTreeListener> implemen
 
 	private static void checkNodes(final List<GrammarNode> nodes) {
 		final List<BooleanExpression> res = nodes.stream()
-				.filter(x -> x instanceof BooleanExpression)
+				.filter(BooleanExpression.class::isInstance)
 				.map(BooleanExpression.class::cast)
 				.filter(x -> x.getOp() == null)
 				.toList();
