@@ -24,11 +24,11 @@ import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.mockito.Mockito;
 
-import com.ubiqube.etsi.mano.grammar.Node;
+import com.ubiqube.etsi.mano.grammar.GrammarNode;
 
 public class TestAntlrGrammar extends AbstractAntlrGrammar<TestParseTreeListener> {
 
-	List<Node<String>> nodes = List.of();
+	List<GrammarNode> nodes = List.of();
 
 	@Override
 	protected Parser createParser(final CommonTokenStream tokens, final ParseTreeListener treeBuilder) {
@@ -41,7 +41,7 @@ public class TestAntlrGrammar extends AbstractAntlrGrammar<TestParseTreeListener
 	}
 
 	@Override
-	protected List<Node<String>> getNodes(final TestParseTreeListener treeBuilder) {
+	protected List<GrammarNode> getNodes(final TestParseTreeListener treeBuilder) {
 		return nodes;
 	}
 

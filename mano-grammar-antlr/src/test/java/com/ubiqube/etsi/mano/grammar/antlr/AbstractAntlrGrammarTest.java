@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import com.ubiqube.etsi.mano.grammar.BooleanExpression;
 import com.ubiqube.etsi.mano.grammar.GrammarException;
-import com.ubiqube.etsi.mano.grammar.Node;
-import com.ubiqube.etsi.mano.grammar.Node.Operand;
+import com.ubiqube.etsi.mano.grammar.GrammarOperandType;
 
 /**
  *
@@ -55,14 +55,14 @@ class AbstractAntlrGrammarTest {
 	@Test
 	void testQueryWrongNode() {
 		final TestAntlrGrammar g = new TestAntlrGrammar();
-		g.nodes = List.of(new Node<>());
+		g.nodes = List.of(new BooleanExpression(null, null, null));
 		assertThrows(GrammarException.class, () -> g.parse("Hello!"));
 	}
 
 	@Test
 	void testQueryNode() {
 		final TestAntlrGrammar g = new TestAntlrGrammar();
-		g.nodes = List.of(new Node<>("", Operand.EQ, List.of()));
+		g.nodes = List.of(new BooleanExpression(null, GrammarOperandType.EQ, null));
 		g.parse("Hello!");
 		assertNotNull(g);
 	}

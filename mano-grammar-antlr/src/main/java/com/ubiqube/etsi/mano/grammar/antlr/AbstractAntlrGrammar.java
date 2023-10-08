@@ -25,15 +25,17 @@ import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.springframework.lang.Nullable;
 
+import com.ubiqube.etsi.mano.grammar.BooleanExpression;
 import com.ubiqube.etsi.mano.grammar.GrammarException;
+import com.ubiqube.etsi.mano.grammar.GrammarNode;
+import com.ubiqube.etsi.mano.grammar.GrammarNodeResult;
 import com.ubiqube.etsi.mano.grammar.GrammarParser;
-import com.ubiqube.etsi.mano.grammar.Node;
 
 public abstract class AbstractAntlrGrammar<T extends ParseTreeListener> implements GrammarParser {
 
 	@Override
-	public final List<Node<String>> parse(final @Nullable String query) {
-		List<Node<String>> nodes = new ArrayList<>();
+	public final GrammarNodeResult parse(final @Nullable String query) {
+		List<GrammarNode> nodes = new ArrayList<>();
 		final T treeBuilder = createTreeBuilder();
 		if ((null != query) && !query.isEmpty()) {
 			final Lexer el = createLexer(query);
@@ -42,23 +44,27 @@ public abstract class AbstractAntlrGrammar<T extends ParseTreeListener> implemen
 			nodes = getNodes(treeBuilder);
 			checkNodes(nodes);
 		}
-		return nodes;
+		return new GrammarNodeResult(nodes);
 	}
 
 	protected abstract Parser createParser(CommonTokenStream tokens, ParseTreeListener treeBuilder);
 
 	protected abstract T createTreeBuilder();
 
-	protected abstract List<Node<String>> getNodes(T treeBuilder);
+	protected abstract List<GrammarNode> getNodes(T treeBuilder);
 
 	protected abstract Lexer createLexer(String query);
 
-	private static void checkNodes(final List<Node<String>> nodes) {
-		nodes.forEach(x -> {
-			if (null == x.getOp()) {
-				throw new GrammarException("Bad filter: " + x);
-			}
-		});
+	private static void checkNodes(final List<GrammarNode> nodes) {
+		final List<BooleanExpression> res = nodes.stream()
+				.filter(x -> x instanceof BooleanExpression)
+				.map(BooleanExpression.class::cast)
+				.filter(x -> x.getOp() == null)
+				.toList();
+
+		if (!res.isEmpty()) {
+			throw new GrammarException("Bad filter: " + res);
+		}
 	}
 
 }
