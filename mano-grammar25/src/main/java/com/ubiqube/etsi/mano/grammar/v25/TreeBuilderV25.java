@@ -30,7 +30,6 @@
  */
 package com.ubiqube.etsi.mano.grammar.v25;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,85 +41,70 @@ import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.SimpleFilterExprMultiContext
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.SimpleFilterExprOneContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.ValueContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25BaseListener;
-import com.ubiqube.etsi.mano.grammar.Node;
-import com.ubiqube.etsi.mano.grammar.Node.Operand;
+import com.ubiqube.etsi.mano.grammar.GrammarContext;
+import com.ubiqube.etsi.mano.grammar.GrammarNode;
+import com.ubiqube.etsi.mano.grammar.GrammarOperandType;
 
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 public class TreeBuilderV25 extends EtsiFilterV25BaseListener {
-	private static final String CURRENT_NODE_IS_NULL = "Current node is null";
-	@Nullable
-	private Node<String> currentNode;
-	@Nonnull
-	private final List<Node<String>> listNode = new ArrayList<>();
 
-	public List<Node<String>> getListNode() {
-		return listNode;
+	private final GrammarContext context = new GrammarContext();
+
+	public List<GrammarNode> getListNode() {
+		return context.getResults();
 	}
 
 	@Override
 	public void enterSimpleFilterExprOne(final @Nullable SimpleFilterExprOneContext ctx) {
-		currentNode = new Node<>();
+		context.clear();
 	}
 
 	@Override
 	public void enterSimpleFilterExprMulti(final @Nullable SimpleFilterExprMultiContext ctx) {
-		currentNode = new Node<>();
+		context.clear();
 	}
 
 	@Override
 	public void exitSimpleFilterExprOne(final @Nullable SimpleFilterExprOneContext ctx) {
-		listNode.add(currentNode);
-		currentNode = null;
+		context.pushAndClear();
 	}
 
 	@Override
 	public void exitSimpleFilterExprMulti(final @Nullable SimpleFilterExprMultiContext ctx) {
-		listNode.add(currentNode);
-		currentNode = null;
+		context.pushAndClear();
 	}
 
 	@Override
 	public void exitFilter(final @Nullable FilterContext ctx) {
 		Objects.requireNonNull(ctx);
-		Objects.requireNonNull(currentNode, CURRENT_NODE_IS_NULL);
-		currentNode.addValue(ctx.getText());
+		context.pushAndClear();
 	}
 
 	@Override
 	public void exitOpOne(final @Nullable OpOneContext ctx) {
 		Objects.requireNonNull(ctx);
-		final Operand op = Operand.valueOf(ctx.getText().toUpperCase());
-		Objects.requireNonNull(currentNode, CURRENT_NODE_IS_NULL);
-		currentNode.setOp(op);
+		final GrammarOperandType op = GrammarOperandType.valueOf(ctx.getText().toUpperCase());
+		context.setOp(op);
 	}
 
 	@Override
 	public void exitOpMulti(final @Nullable OpMultiContext ctx) {
 		Objects.requireNonNull(ctx);
-		final Operand op = Operand.valueOf(ctx.getText().toUpperCase());
-		Objects.requireNonNull(currentNode, CURRENT_NODE_IS_NULL);
-		currentNode.setOp(op);
+		final GrammarOperandType op = GrammarOperandType.valueOf(ctx.getText().toUpperCase());
+		context.setOpMulti(op);
 	}
 
 	@Override
 	public void exitAttrName(final @Nullable AttrNameContext ctx) {
 		Objects.requireNonNull(ctx);
-		final Node<String> cn = Objects.requireNonNull(currentNode, CURRENT_NODE_IS_NULL);
-		final String currentName = cn.getName();
-		if (null == currentName) {
-			cn.setName(ctx.getText());
-		} else {
-			cn.setName(cn.getName() + "." + ctx.getText());
-		}
+		context.pushAttr(ctx.getText());
 	}
 
 	@Override
 	public void exitValue(final @Nullable ValueContext ctx) {
 		Objects.requireNonNull(ctx);
-		Objects.requireNonNull(currentNode, CURRENT_NODE_IS_NULL);
-		currentNode.addValue(ctx.getText());
+		context.addValue(ctx.getText());
 	}
 
 }

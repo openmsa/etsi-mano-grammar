@@ -17,12 +17,12 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.ubiqube.etsi.mano.grammar.Node.Operand;
 import com.ubiqube.etsi.mano.grammar.v25.Grammar25Service;
 
 /**
@@ -37,22 +37,37 @@ class GrammarV25Test {
 	void test() {
 		final GrammarParser gp = new Grammar25Service();
 		// (eq,weight,100);(neq,weight/aa,100);(in,weight/aa,100,55)
-		final List<Node<String>> nodes = gp.parse("(eq,weight,100);(neq,weight/aa,100);(in,weight/aa,100,55)");
+		final GrammarNodeResult nodes = gp.parse("(eq,weight,100);(neq,weight/aa,100);(in,weight/aa,100,55)");
 		assertEquals(3, nodes.size());
-		assertNode(nodes.get(0), "weight", Operand.EQ, "100");
-		assertNode(nodes.get(1), "weight.aa", Operand.NEQ, "100");
-		// It's wrong.?
-		final Node<String> node = nodes.get(2);
-		assertEquals("weight.aa", node.getName());
-		assertEquals(Operand.IN, node.getOp());
-		final List<String> values = node.getValues();
-		assertEquals("100", values.get(0));
-		assertEquals("55", values.get(1));
+		assertNode((BooleanExpression) nodes.get(0), List.of("weight"), GrammarOperandType.EQ, List.of("100"));
+		assertNode((BooleanExpression) nodes.get(1), List.of("weight", "aa"), GrammarOperandType.NEQ, List.of("100"));
+		assertNode((BooleanExpression) nodes.get(2), List.of("weight", "aa"), GrammarOperandType.IN, List.of("100", "55"));
 	}
 
-	private static void assertNode(final Node<String> node, final String key, final Operand op, final String value) {
-		assertEquals(key, node.getName());
+	private static void assertNode(final BooleanExpression node, final List<String> key, final GrammarOperandType op, final List<String> value) {
+		final GrammarLabel l = (GrammarLabel) node.getLeft();
+		assertKey(key, l);
 		assertEquals(op, node.getOp());
-		assertEquals(value, node.getValue());
+		assertValue(value, (GrammarValue) node.getRight());
+	}
+
+	private static void assertKey(final List<String> keys, final GrammarLabel labels) {
+		if (keys.size() == 1) {
+			assertTrue(labels.isSingle());
+			assertEquals(keys.get(0), labels.getAsString());
+			return;
+		}
+		final List<String> labs = labels.getList();
+		assertEquals(keys, labs);
+	}
+
+	private static void assertValue(final List<String> keys, final GrammarValue labels) {
+		if (keys.size() == 1) {
+			assertTrue(labels.isSingle());
+			assertEquals(keys.get(0), labels.getAsString());
+			return;
+		}
+		final List<String> labs = labels.getList();
+		assertEquals(keys, labs);
 	}
 }
