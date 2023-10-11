@@ -50,7 +50,7 @@ public class GrammarValue implements GrammarNode {
 		return null == next;
 	}
 
-	public Object getAsString() {
+	public String getAsString() {
 		if (next != null) {
 			throw new GrammarException("");
 		}

@@ -57,7 +57,7 @@ public class GrammarLabel implements GrammarNode {
 		return right == null;
 	}
 
-	public Object getAsString() {
+	public String getAsString() {
 		if (right != null) {
 			throw new GrammarException("");
 		}
