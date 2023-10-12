@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,18 +29,19 @@ import lombok.Setter;
 @Setter
 public class GrammarValue implements GrammarNode {
 	private String value;
+	@Nullable
 	private GrammarValue next;
 
-	public GrammarValue(final String value) {
+	public GrammarValue(final @Nonnull String value) {
 		this.value = value;
 	}
 
-	public GrammarValue(final String value, final GrammarValue next) {
+	public GrammarValue(final @Nonnull String value, final @Nullable GrammarValue next) {
 		this.value = value;
 		this.next = next;
 	}
 
-	public void append(final String text) {
+	public void append(final @Nonnull String text) {
 		if (null == next) {
 			next = new GrammarValue(text);
 		} else {
