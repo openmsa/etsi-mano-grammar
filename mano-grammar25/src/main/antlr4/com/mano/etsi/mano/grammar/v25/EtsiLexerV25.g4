@@ -24,7 +24,5 @@ FILTER: 'filter';
 
 ATTRIBUTE: [a-zA-Z]+;
 STRING: ~('('|')'|'.'|'='|','|'/')+;
-FULL_STRING: ~['\\']+;
-
-QUOTED_STRING: QUOTE FULL_STRING QUOTE;
+QUOTED_STRING: QUOTE ~['\\']+ QUOTE;
 
