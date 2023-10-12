@@ -35,11 +35,12 @@ import java.util.Objects;
 
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.AttrNameContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.FilterContext;
+import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.LiteralContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.OpMultiContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.OpOneContext;
+import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.QuotedLiteralContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.SimpleFilterExprMultiContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.SimpleFilterExprOneContext;
-import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.ValueContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25BaseListener;
 import com.ubiqube.etsi.mano.grammar.GrammarContext;
 import com.ubiqube.etsi.mano.grammar.GrammarNode;
@@ -102,9 +103,19 @@ public class TreeBuilderV25 extends EtsiFilterV25BaseListener {
 	}
 
 	@Override
-	public void exitValue(final @Nullable ValueContext ctx) {
+	public void exitLiteral(final LiteralContext ctx) {
 		Objects.requireNonNull(ctx);
 		context.addValue(ctx.getText());
+	}
+
+	@Override
+	public void exitQuotedLiteral(final QuotedLiteralContext ctx) {
+		Objects.requireNonNull(ctx);
+		context.addValue(unquote(ctx.getText()));
+	}
+
+	private static String unquote(final String text) {
+		return text.substring(1, text.length() - 1);
 	}
 
 }

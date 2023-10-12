@@ -37,11 +37,12 @@ class GrammarV25Test {
 	void test() {
 		final GrammarParser gp = new Grammar25Service();
 		// (eq,weight,100);(neq,weight/aa,100);(in,weight/aa,100,55)
-		final GrammarNodeResult nodes = gp.parse("(eq,weight,100);(neq,weight/aa,100);(in,weight/aa,100,55)");
-		assertEquals(3, nodes.size());
+		final GrammarNodeResult nodes = gp.parse("(eq,weight,100);(neq,weight/aa,100);(in,weight/aa,100,55);(eq,version,'1.0.0')");
+		assertEquals(4, nodes.size());
 		assertNode((BooleanExpression) nodes.get(0), List.of("weight"), GrammarOperandType.EQ, List.of("100"));
 		assertNode((BooleanExpression) nodes.get(1), List.of("weight", "aa"), GrammarOperandType.NEQ, List.of("100"));
 		assertNode((BooleanExpression) nodes.get(2), List.of("weight", "aa"), GrammarOperandType.IN, List.of("100", "55"));
+		assertNode((BooleanExpression) nodes.get(3), List.of("version"), GrammarOperandType.EQ, List.of("1.0.0"));
 	}
 
 	private static void assertNode(final BooleanExpression node, final List<String> key, final GrammarOperandType op, final List<String> value) {
