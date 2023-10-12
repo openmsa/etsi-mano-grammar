@@ -14,4 +14,4 @@ opOne: EQ | NEQ | GT | LT | GTE | LTE;
 opMulti: IN | NIN | CONT | NCONT;
 
 attrName      : ATTRIBUTE;
-value            : STRING;
+value            : STRING | QUOTED_STRING;

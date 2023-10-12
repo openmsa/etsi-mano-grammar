@@ -6,7 +6,7 @@ OPEN_BRACKET: '(';
 CLOSE_BRACKET: ')';
 SEMICOLON: ';';
 EQUAL: '=';
-
+QUOTE: '\'';
 
 EQ: 'eq';
 NEQ: 'neq';
@@ -24,4 +24,7 @@ FILTER: 'filter';
 
 ATTRIBUTE: [a-zA-Z]+;
 STRING: ~('('|')'|'.'|'='|','|'/')+;
+FULL_STRING: ~['\\']+;
+
+QUOTED_STRING: QUOTE FULL_STRING QUOTE;
 
