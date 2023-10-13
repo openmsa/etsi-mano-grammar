@@ -17,6 +17,7 @@
 package com.ubiqube.etsi.mano.grammar;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -30,9 +31,9 @@ import com.ubiqube.etsi.mano.grammar.v25.Grammar25Service;
  * @author olivier
  *
  */
+@SuppressWarnings("static-method")
 class GrammarV25Test {
 
-	@SuppressWarnings("static-method")
 	@Test
 	void test() {
 		final GrammarParser gp = new Grammar25Service();
@@ -43,6 +44,20 @@ class GrammarV25Test {
 		assertNode((BooleanExpression) nodes.get(1), List.of("weight", "aa"), GrammarOperandType.NEQ, List.of("100"));
 		assertNode((BooleanExpression) nodes.get(2), List.of("weight", "aa"), GrammarOperandType.IN, List.of("100", "55"));
 		assertNode((BooleanExpression) nodes.get(3), List.of("version"), GrammarOperandType.EQ, List.of("1.0.0"));
+	}
+
+	@Test
+	void test2() {
+		final GrammarParser gp = new Grammar25Service();
+		final GrammarNodeResult nodes = gp.parse("(eq,onboardingState,ONBOARDED)");
+		assertEquals(1, nodes.size());
+		assertNode((BooleanExpression) nodes.get(0), List.of("onboardingState"), GrammarOperandType.EQ, List.of("ONBOARDED"));
+	}
+
+	@Test
+	void testParseFail() {
+		final GrammarParser gp = new Grammar25Service();
+		assertThrows(GrammarException.class, () -> gp.parse("(bad,onboardingState,ONBOARDED)"));
 	}
 
 	private static void assertNode(final BooleanExpression node, final List<String> key, final GrammarOperandType op, final List<String> value) {
@@ -64,7 +79,7 @@ class GrammarV25Test {
 
 	private static void assertValue(final List<String> keys, final GrammarValue labels) {
 		if (keys.size() == 1) {
-			assertTrue(labels.isSingle());
+			assertTrue(labels.isSingle(), "Value should be single.");
 			assertEquals(keys.get(0), labels.getAsString());
 			return;
 		}

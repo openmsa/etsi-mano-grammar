@@ -44,6 +44,7 @@ import com.mano.etsi.mano.grammar.v25.EtsiFilterV25;
 import com.mano.etsi.mano.grammar.v25.EtsiLexerV25;
 import com.ubiqube.etsi.mano.grammar.GrammarNode;
 import com.ubiqube.etsi.mano.grammar.antlr.AbstractAntlrGrammar;
+import com.ubiqube.etsi.mano.grammar.antlr.ErrorListener;
 
 /**
  *
@@ -58,6 +59,7 @@ public class Grammar25Service extends AbstractAntlrGrammar<TreeBuilderV25> {
 	protected Parser createParser(final CommonTokenStream tokens, final ParseTreeListener treeBuilder) {
 		final EtsiFilterV25 parser = new EtsiFilterV25(tokens);
 		parser.addParseListener(treeBuilder);
+		parser.addErrorListener(new ErrorListener());
 		parser.filterExpr();
 		return parser;
 	}
