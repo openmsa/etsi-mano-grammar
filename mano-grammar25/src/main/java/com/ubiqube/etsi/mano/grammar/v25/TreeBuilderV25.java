@@ -33,14 +33,16 @@ package com.ubiqube.etsi.mano.grammar.v25;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.AttrNameContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.FilterContext;
-import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.LiteralContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.OpMultiContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.OpOneContext;
-import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.QuotedLiteralContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.SimpleFilterExprMultiContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.SimpleFilterExprOneContext;
+import com.mano.etsi.mano.grammar.v25.EtsiFilterV25.ValueContext;
 import com.mano.etsi.mano.grammar.v25.EtsiFilterV25BaseListener;
 import com.ubiqube.etsi.mano.grammar.GrammarContext;
 import com.ubiqube.etsi.mano.grammar.GrammarNode;
@@ -49,6 +51,8 @@ import com.ubiqube.etsi.mano.grammar.GrammarOperandType;
 import jakarta.annotation.Nullable;
 
 public class TreeBuilderV25 extends EtsiFilterV25BaseListener {
+
+	private static final Logger LOG = LoggerFactory.getLogger(TreeBuilderV25.class);
 
 	private final GrammarContext context = new GrammarContext();
 
@@ -99,19 +103,19 @@ public class TreeBuilderV25 extends EtsiFilterV25BaseListener {
 	@Override
 	public void exitAttrName(final @Nullable AttrNameContext ctx) {
 		Objects.requireNonNull(ctx);
+		LOG.trace("ExitAttr: {}", ctx.getText());
 		context.pushAttr(ctx.getText());
 	}
 
 	@Override
-	public void exitLiteral(final LiteralContext ctx) {
-		Objects.requireNonNull(ctx);
-		context.addValue(ctx.getText());
-	}
-
-	@Override
-	public void exitQuotedLiteral(final QuotedLiteralContext ctx) {
-		Objects.requireNonNull(ctx);
-		context.addValue(unquote(ctx.getText()));
+	public void exitValue(final ValueContext ctx) {
+		if (null != ctx.quotedString()) {
+			context.addValue(unquote(ctx.getText()));
+		} else {
+			context.addValue(ctx.getText());
+		}
+		LOG.trace("ExitValue: {}", ctx.getText());
+		super.enterValue(ctx);
 	}
 
 	private static String unquote(final String text) {

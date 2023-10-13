@@ -13,7 +13,7 @@ filter: FILTER EQUAL filterExpr;
 opOne: EQ | NEQ | GT | LT | GTE | LTE;
 opMulti: IN | NIN | CONT | NCONT;
 
-attrName      : ATTRIBUTE;
-value         : literal | quotedLiteral;
-literal       : STRING;
-quotedLiteral: QUOTED_STRING;
+attrName      : simpleString | quotedString;
+value         : simpleString | quotedString;
+simpleString: STRING;
+quotedString: QUOTED_STRING;

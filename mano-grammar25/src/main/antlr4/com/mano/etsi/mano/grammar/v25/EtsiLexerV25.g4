@@ -22,7 +22,8 @@ CONT: 'cont';
 NCONT: 'ncont';
 FILTER: 'filter';
 
-ATTRIBUTE: [a-zA-Z]+;
-STRING: ~('('|')'|'.'|'='|','|'/')+;
-QUOTED_STRING: QUOTE ~['\\']+ QUOTE;
+
+QUOTED_STRING: QUOTE ~('\'' | '\\')+ QUOTE;
+STRING: ~('('|')'|'.'|'='|','|'/'|'\'')+;
+LITERAL: STRING | QUOTED_STRING;
 
