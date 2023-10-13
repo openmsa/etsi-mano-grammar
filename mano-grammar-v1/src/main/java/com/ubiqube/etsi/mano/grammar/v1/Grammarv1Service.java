@@ -43,6 +43,7 @@ import com.mano.etsi.grammar.v1.EtsiFilter;
 import com.mano.etsi.grammar.v1.EtsiLexer;
 import com.ubiqube.etsi.mano.grammar.GrammarNode;
 import com.ubiqube.etsi.mano.grammar.antlr.AbstractAntlrGrammar;
+import com.ubiqube.etsi.mano.grammar.antlr.ErrorListener;
 
 /**
  *
@@ -56,6 +57,7 @@ public class Grammarv1Service extends AbstractAntlrGrammar<TreeBuilder> {
 	protected Parser createParser(final CommonTokenStream tokens, final ParseTreeListener treeBuilder) {
 		final EtsiFilter parser = new EtsiFilter(tokens);
 		parser.addParseListener(treeBuilder);
+		parser.addErrorListener(new ErrorListener());
 		parser.filterExpr();
 		return parser;
 	}
