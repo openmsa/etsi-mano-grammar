@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ubiqube.etsi.mano.grammar.v25.Grammar25Service;
 
@@ -33,6 +35,8 @@ import com.ubiqube.etsi.mano.grammar.v25.Grammar25Service;
  */
 @SuppressWarnings("static-method")
 class GrammarV25Test {
+	/** Logger. */
+	private static final Logger LOG = LoggerFactory.getLogger(GrammarV25Test.class);
 
 	@Test
 	void test() {
@@ -68,6 +72,7 @@ class GrammarV25Test {
 	}
 
 	private static void assertKey(final List<String> keys, final GrammarLabel labels) {
+		LOG.info("key size {}", keys.size());
 		if (keys.size() == 1) {
 			assertTrue(labels.isSingle());
 			assertEquals(keys.get(0), labels.getAsString());
