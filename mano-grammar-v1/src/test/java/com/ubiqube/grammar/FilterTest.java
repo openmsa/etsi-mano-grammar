@@ -35,7 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.jupiter.api.Test;
 
@@ -44,11 +45,12 @@ import com.mano.etsi.grammar.v1.EtsiLexer;
 import com.ubiqube.etsi.mano.grammar.GrammarNode;
 import com.ubiqube.etsi.mano.grammar.v1.TreeBuilder;
 
+@SuppressWarnings("static-method")
 class FilterTest {
 
 	@Test
 	void treeTest() {
-		final ANTLRInputStream input = new ANTLRInputStream("weight.eq=100");
+		final CodePointCharStream input = CharStreams.fromString("weight.eq=100");
 		final EtsiLexer lexer = new EtsiLexer(input);
 
 		final CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -63,7 +65,7 @@ class FilterTest {
 
 	@Test
 	void testMultiFilter() throws Exception {
-		final ANTLRInputStream input = new ANTLRInputStream("weight.eq=100&color.neq=red");
+		final CodePointCharStream input = CharStreams.fromString("weight.eq=100&color.neq=red");
 		final EtsiLexer lexer = new EtsiLexer(input);
 
 		final CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -78,7 +80,7 @@ class FilterTest {
 
 	@Test
 	void testMultiDot() throws Exception {
-		final ANTLRInputStream input = new ANTLRInputStream("color.of.my.bean.neq=red");
+		final CodePointCharStream input = CharStreams.fromString("color.of.my.bean.neq=red");
 		final EtsiLexer lexer = new EtsiLexer(input);
 
 		final CommonTokenStream tokens = new CommonTokenStream(lexer);
