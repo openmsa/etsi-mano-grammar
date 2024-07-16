@@ -2,4 +2,8 @@
 .settings/
 .classpath
 .factorypath
+
+.vscode/
+
 target/
+
