@@ -74,6 +74,7 @@ public class TreeBuilder extends EtsiFilterBaseListener {
 
 	@Override
 	public void exitAttrName(final @Nullable AttrNameContext ctx) {
+		Objects.requireNonNull(ctx);
 		context.pushAttr(ctx.getText());
 		super.exitAttrName(ctx);
 	}
