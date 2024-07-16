@@ -34,11 +34,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.mano.etsi.grammar.v1.EtsiFilter;
 import com.mano.etsi.grammar.v1.EtsiLexer;
@@ -48,9 +51,10 @@ import com.ubiqube.etsi.mano.grammar.v1.TreeBuilder;
 @SuppressWarnings("static-method")
 class FilterTest {
 
-	@Test
-	void treeTest() {
-		final CodePointCharStream input = CharStreams.fromString("weight.eq=100");
+	@ParameterizedTest
+	@MethodSource("providerClass")
+	void treeTest(final args arg) {
+		final CodePointCharStream input = CharStreams.fromString(arg.syntax);
 		final EtsiLexer lexer = new EtsiLexer(input);
 
 		final CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -60,36 +64,20 @@ class FilterTest {
 		parser.filterExpr();
 		final List<GrammarNode> listNode = treeBuilder.getListNode();
 		assertNotNull(listNode);
-		assertEquals(1, listNode.size());
+		assertEquals(arg.number, listNode.size());
 	}
 
-	@Test
-	void testMultiFilter() throws Exception {
-		final CodePointCharStream input = CharStreams.fromString("weight.eq=100&color.neq=red");
-		final EtsiLexer lexer = new EtsiLexer(input);
-
-		final CommonTokenStream tokens = new CommonTokenStream(lexer);
-		final EtsiFilter parser = new EtsiFilter(tokens);
-		final TreeBuilder treeBuilder = new TreeBuilder();
-		parser.addParseListener(treeBuilder);
-		parser.filterExpr();
-		final List<GrammarNode> listNode = treeBuilder.getListNode();
-		assertNotNull(listNode);
-		assertEquals(2, listNode.size());
+	private static Stream<Arguments> providerClass() {
+		return Stream.of(
+				Arguments.of(args.of("weight.eq=100", 1),
+						Arguments.of(args.of("weight.eq=100&color.neq=red", 2)),
+						Arguments.of(args.of("color.of.my.bean.neq=red", 1))));
 	}
 
-	@Test
-	void testMultiDot() throws Exception {
-		final CodePointCharStream input = CharStreams.fromString("color.of.my.bean.neq=red");
-		final EtsiLexer lexer = new EtsiLexer(input);
-
-		final CommonTokenStream tokens = new CommonTokenStream(lexer);
-		final EtsiFilter parser = new EtsiFilter(tokens);
-		final TreeBuilder treeBuilder = new TreeBuilder();
-		parser.addParseListener(treeBuilder);
-		parser.filterExpr();
-		final List<GrammarNode> listNode = treeBuilder.getListNode();
-		assertNotNull(listNode);
-		assertEquals(1, listNode.size());
+	record args(String syntax, int number) {
+		public static args of(final String syntax, final int number) {
+			return new args(syntax, number);
+		}
 	}
+
 }
