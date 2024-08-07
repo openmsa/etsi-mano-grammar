@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.ubiqube.mano</groupId>
 		<artifactId>mano-grammar-aggregator</artifactId>
-		<version>5.0.0-SNAPSHOT</version>
+		<version>4.0.0</version>
 	</parent>
 	<artifactId>mano-grammar-api</artifactId>
 	<dependencies>
