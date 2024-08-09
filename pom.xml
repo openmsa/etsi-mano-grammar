@@ -17,7 +17,7 @@
 		<module>mano-grammar-antlr</module>
 	</modules>
 	<scm>
-		<developerConnection>scm:git:https://github.com/openmsa/etsi-mano-grammar.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com/openmsa/etsi-mano-grammar.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<properties>
