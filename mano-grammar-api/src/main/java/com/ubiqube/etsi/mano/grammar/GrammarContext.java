@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import lombok.Getter;
 
 @Getter
@@ -29,7 +29,7 @@ public class GrammarContext {
 	private GrammarOperandType currentOp;
 	private GrammarNode right;
 	private boolean multi;
-	@Nonnull
+	@NonNull
 	private final List<GrammarNode> results = new ArrayList<>();
 
 	public void pushAndClear() {

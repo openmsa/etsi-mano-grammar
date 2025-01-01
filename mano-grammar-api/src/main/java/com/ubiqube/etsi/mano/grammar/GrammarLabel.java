@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GrammarLabel implements GrammarNode {
-	@Nonnull
+	@NonNull
 	private String label;
 	@Nullable
 	private GrammarLabel right;

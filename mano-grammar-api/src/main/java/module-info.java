@@ -19,5 +19,6 @@ module com.ubiqube.etsi.mano.grammar {
 
 	requires lombok;
 	requires jakarta.annotation;
+	requires org.jspecify;
 	requires spring.core;
 }

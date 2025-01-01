@@ -43,7 +43,7 @@ import com.ubiqube.etsi.mano.grammar.GrammarContext;
 import com.ubiqube.etsi.mano.grammar.GrammarNode;
 import com.ubiqube.etsi.mano.grammar.GrammarOperandType;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *
